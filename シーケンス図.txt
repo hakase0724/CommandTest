@@ -1,0 +1,38 @@
+@startuml
+participant GameManeger as gm
+participant StageManeger as sm
+participant Player as p
+participant Dish as d
+participant TimeManeger as tm
+
+== State:Initializ ==
+gm -> p:初期化
+loop FireObjectの数だけ
+gm -> d:初期化
+end
+gm -> tm:初期化
+gm -> sm:初期化
+gm -> gm:Moveへ移行
+
+== State:Move ==
+gm -> tm:タイマ起動＆監視
+activate tm #FFBBBB
+p -> d:場所を移動
+tm -> tm:一定時間カウント
+tm ->> gm:カウント終了
+deactivate tm
+gm -> gm:Fireへ移行
+
+== State:Fire ==
+loop 燃え移ることができる限り繰り返す
+sm -> d:燃えることができれば燃やす
+sm -> sm:燃えているオブジェクトを更新
+end
+sm -> gm:燃え移り終わった結果を通知
+gm -> gm:Endへ移行
+
+== State:End ==
+gm -> gm:答え合わせ
+gm -> gm:終わるか再チャレンジ
+gm -> gm:シーン遷移
+@enduml
