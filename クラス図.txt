@@ -1,0 +1,78 @@
+@startuml
+namespace StageObjects{
+
+ 
+
+}
+
+namespace Dishes{
+
+ enum CookingType{
+  Japanese
+  Western
+Å@Chinese
+ }
+
+ enum DishTemperature{
+  Hot
+  Cold
+ }
+
+ abstract class DishParent{
+  FirePower needPower
+  CookingType type
+  DishTemperature temperature
+ }
+
+ class Dish{
+ }
+ 
+ DishParent <|-- Dish
+
+}
+
+namespace Fires{
+
+ enum FirePower{
+  High
+  Middle
+  Low
+ }
+
+ class Fire{
+  +FirePower firePower{get; private set;}
+ }
+
+}
+
+namespace Players{
+ class Player{
+ 
+ }
+}
+
+namespace GameManegers{
+ enum GameState{
+  Intilaiz
+  Move
+  Fire
+  Result
+ }
+
+ class StageManeger{
+ }
+
+ class MainManeger{
+  -GameState gameState
+ }
+}
+
+namespace Gimmicks{
+
+ class HealPoint{
+ }
+
+ class Bomb{
+ }
+}
+@enduml
