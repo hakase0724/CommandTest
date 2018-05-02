@@ -1,10 +1,4 @@
 @startuml
-namespace StageObjects{
-
- 
-
-}
-
 namespace Dishes{
 
  enum CookingType{
@@ -26,9 +20,10 @@ namespace Dishes{
 
  class Dish{
  }
- 
- DishParent <|-- Dish
 
+ DishParent <|-- Dish
+ Fires.IFire <|-- DishParent
+ Players.IMove <|-- DishParent
 }
 
 namespace Fires{
@@ -39,19 +34,33 @@ namespace Fires{
   Low
  }
 
+ interface IFire{
+  +Burn()
+  +bool IsPossibleBurn
+ }
+
  class Fire{
   +FirePower firePower{get; private set;}
  }
 
+ IFire -> Fire:燃焼確認
+ IFire -> GameManegers.AreaManeger:登録
+ IFire -[hidden]u-> Fire
 }
 
 namespace Players{
+
  class Player{
- 
  }
+
+ interface IMove{
+ }
+
+ Player -> IMove:動かす
 }
 
 namespace GameManegers{
+
  enum GameState{
   Intilaiz
   Move
@@ -59,12 +68,34 @@ namespace GameManegers{
   Result
  }
 
- class StageManeger{
+ class AreaManeger{
+  +readonly int width
+  +readonly int height
+  +IFire BurnObject[width,height]
+  -bool IsBurn()
  }
 
  class MainManeger{
   -GameState gameState
  }
+
+ namespace Timers{
+
+  class TimeManeger{
+  }
+  
+  class RxTimer{
+  }
+
+  TimeManeger -> RxTimer:タイマ起動＆監視
+  TimeManeger -> GameManegers.MainManeger:タイマ終了通知
+
+ }
+
+ 
+
+ MainManeger -> GameManegers.Timers.TimeManeger:タイマ起動
+ AreaManeger -[hidden]r-> MainManeger
 }
 
 namespace Gimmicks{
@@ -74,5 +105,8 @@ namespace Gimmicks{
 
  class Bomb{
  }
+
+ Fires.IFire <|-- HealPoint
+ Fires.IFire <|-- Bomb
 }
 @enduml
