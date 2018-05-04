@@ -1,0 +1,104 @@
+@startuml
+namespace Dishes{
+
+    enum CookingType{
+        Japanese
+        Western
+        Chinese
+    }
+
+    enum DishTemperature{
+        Hot
+        Cold
+    }
+
+    abstract class DishParent{
+        CookingType type
+        DishTemperature temperature
+    }
+
+    class Dish{
+    }
+
+    DishParent <|-- Dish
+    Fires.IFire <|-- DishParent
+    Players.IMove <|-- DishParent
+}
+
+namespace Fires{
+
+    enum FirePower{
+        High
+        Middle
+        Low
+    }
+
+    interface IFire{
+        +FirePower needPower
+        +bool Burn()
+    }
+
+    class Fire{
+        +FirePower firePower{get; private set;}
+    }
+
+    IFire -> Fire:燃焼確認
+    Fire -[hidden]u-> IFire
+}
+
+namespace Players{
+
+    class Player{
+        -void ObjectMove()
+    }
+
+    interface IMove{
+    }
+
+    Player -> IMove:動かす
+}
+
+namespace GameManegers{
+
+    enum GameState{
+        Intilaiz
+        Move
+        Fire
+        Result
+    }
+
+    class AreaManeger{
+        +readonly int width
+        +readonly int height
+        -Fire fire [width,height]
+        -IFire burnObject[width,height]
+        -void SetTables()
+    }
+
+    class MainManeger{
+        +ReactivePropaty<GameState> StateRP
+        -GameState gameState
+        -void TimerStart()
+
+    }
+
+    class RxTimer{
+    }
+
+    AreaManeger -> MainManeger:State監視
+    MainManeger -> RxTimer:タイマ起動&監視
+    AreaManeger -[hidden]r-> MainManeger
+}
+
+namespace Gimmicks{
+
+    class HealPoint{
+    }
+
+    class Bomb{
+    }
+
+    Fires.IFire <|-- HealPoint
+    Fires.IFire <|-- Bomb
+}
+@enduml
